@@ -1,0 +1,46 @@
+# Define model folder
+$modelFolder = "./slm"
+$hfModelId = "microsoft/Phi-3-mini-4k-instruct-onnx"
+
+# Clone Phi3 model from Huggingface
+## Attention MAC Users: You need to install git-lfs before cloning the model
+## e.g.: brew install git-lfs
+
+git lfs install
+git clone https://huggingface.co/{$hfModelId} $modelFolder
+
+# Get full model folder path
+$slmFolderPath = (Get-Item -Path $modelFolder).FullName + "/Phi-3-mini-4k-instruct-onnx/cpu_and_mobile/cpu-int4-rtn-block-32-acc-level-4"
+
+# Store configuration 
+$configurationFile = "./config/config.env"
+New-Item -Name $configurationFile -ItemType File -Force
+
+function Set-ConfigurationFileVariable($configurationFile, $variableName, $variableValue) {
+    if (Select-String -Path $configurationFile -Pattern $variableName) {
+        (Get-Content $configurationFile) | Foreach-Object {
+            $_ -replace "$variableName = .*", "$variableName = $variableValue"
+        } | Set-Content $configurationFile
+    } else {
+        Add-Content -Path $configurationFile -value "$variableName = $variableValue"
+    }
+}
+
+Set-ConfigurationFileVariable $configurationFile "SLM_MODELPATH" $slmFolderPath
+Set-ConfigurationFileVariable $configurationFile "INFERENCE_APIKEY" "notneeded"
+
+Write-Host "Configuration file created at: $configurationFile"
+
+# Start Web Api in a terminal window or press F5 in Visual Studio Code for debugging
+cd ./src/webapi
+$env:ASPNETCORE_URLS = "http://localhost:5225"
+dotnet run
+
+# Restore angular app dependencies (start a new pwsh terminal window)
+cd ./src/ui_angular
+npm install
+ng serve
+cd ../..
+
+# Start a browser and point it to http://localhost:4200
+

@@ -1,0 +1,15 @@
+@webapi_HostAddress = http://localhost:5225
+
+### SLM call
+GET {{webapi_HostAddress}}/response?text=What is quantum computing?
+Accept: application/json
+
+### SLM call stream
+GET {{webapi_HostAddress}}/responsestream?text=What is quantum computing?
+Accept: application/json
+
+
+### Ping
+GET {{webapi_HostAddress}}/ping?text=ping
+Accept: application/json
+

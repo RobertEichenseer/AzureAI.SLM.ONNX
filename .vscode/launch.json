@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "webapi",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build_webapi",
+            "program": "${workspaceFolder}/src/webapi/bin/Debug/net8.0/webapi.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/webapi",
+            "stopAtEntry": false,
+            
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development", 
+                "ASPNETCORE_URLS": "http://localhost:5225"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        }
+    ]
+}
